@@ -1,15 +1,25 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <h3>Default</h3>
+  <Button />
+  <h3>outline</h3>
+  <Button variant="outline"/>
+  <h3>text</h3>
+  <Button variant="text"/>
+  <h3>primary no shadow</h3>
+  <Button color="primary" v-bind:hasShadow="false"/>
+  <h3>secondary</h3>
+  <Button color="secondary"/>
+  <h3>danger</h3>
+  <Button color="danger"/>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import HelloWorld from "./components/HelloWorld.vue";
+import Button from "./components/Button.vue";
 
 @Options({
   components: {
-    HelloWorld,
+    Button,
   },
 })
 export default class App extends Vue {}
