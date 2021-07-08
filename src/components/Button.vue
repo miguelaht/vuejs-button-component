@@ -1,6 +1,8 @@
 <template>
-  <button id="btn" :class="btnType">
-    <span>Default</span>
+  <button :class="btnType" :disabled="!isActive">
+    <span v-if="startIcon" :class="iconSize">{{ startIcon }}</span>
+    <span>Button</span>
+    <span v-if="endIcon" :class="iconSize">{{ endIcon }}</span>
   </button>
 </template>
 
@@ -17,7 +19,7 @@ import { Options, Vue } from "vue-class-component";
       default: true,
       type: Boolean,
     },
-    isEnabled: {
+    isActive: {
       default: true,
       type: Boolean,
     },
@@ -25,9 +27,18 @@ import { Options, Vue } from "vue-class-component";
       default: null,
       type: String,
     },
-    startIcon: "",
-    endIcon: "",
-    size: "",
+    startIcon: {
+      default: null,
+      type: String,
+    },
+    endIcon: {
+      default: null,
+      type: String,
+    },
+    size: {
+      default: "md-18",
+      type: String,
+    },
   },
   methods: {
     btnVariant(): string {
@@ -46,9 +57,17 @@ import { Options, Vue } from "vue-class-component";
 
       return " ";
     },
+    validSize(): boolean {
+      return ["sm", "md", "lg", "xl"].indexOf(this.size) != -1;
+    },
+    btnSize(): string {
+      return this.validSize() ? `btn-${this.size}` : "btn-sm ";
+    }
   },
   computed: {
     btnType() {
+      if (!this.isActive) return "";
+
       let classes = "";
 
       classes += this.btnColor();
@@ -57,7 +76,13 @@ import { Options, Vue } from "vue-class-component";
 
       classes += this.btnHasShadow();
 
+      classes += this.btnSize();
       return classes;
+    },
+    iconSize() {
+      if (this.validSize()) return `material-icons ${this.size}`;
+
+      return "material-icons sm";
     },
   },
 })
@@ -65,12 +90,22 @@ export default class Button extends Vue {}
 </script>
 
 <style scoped>
-#btn {
+button {
   padding: 7px 15px;
   border-radius: 5px;
   font-size: 1rem;
   z-index: 1;
   transition: background-color 0.5s;
+  transition: transform 0.5s;
+}
+button:disabled,
+button[disabled] {
+  color: black;
+  background-color: rgba(128, 128, 128, 0.6);
+  border: 0;
+}
+button:focus {
+  transform: scale(1.08);
 }
 span {
   z-index: 2;
@@ -79,6 +114,18 @@ span {
   box-shadow: 0 2px 3px;
 }
 
+.btn-sm {
+  font-size: 18px;
+}
+.btn-md {
+  font-size: 24px;
+}
+.btn-lg {
+  font-size: 36px;
+}
+.btn-xl {
+  font-size: 48px;
+}
 /* */
 .btn-default {
   color: black;
@@ -88,7 +135,6 @@ span {
 .btn-default:hover {
   background-color: rgba(128, 128, 128, 1);
 }
-
 /* */
 .btn-primary {
   color: white;
@@ -98,7 +144,6 @@ span {
 .btn-primary:hover {
   background-color: rgba(127, 127, 255, 1);
 }
-
 /* */
 .btn-secondary {
   color: white;
@@ -138,5 +183,39 @@ span {
 }
 .btn-text:hover {
   background-color: rgba(127, 127, 255, 0.2);
+}
+.material-icons {
+top: 5px;
+  position: relative;
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: "liga";
+}
+.material-icons.sm {
+  font-size: 18px;
+}
+.material-icons.md {
+  font-size: 24px;
+}
+.material-icons.lg {
+  font-size: 36px;
+}
+.material-icons.xl {
+  font-size: 48px;
 }
 </style>
